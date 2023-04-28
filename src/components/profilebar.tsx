@@ -1,21 +1,43 @@
-import { useUser } from "@clerk/nextjs";
+import { SignOutButton, useUser } from "@clerk/nextjs";
+import { User } from "@clerk/nextjs/dist/api";
+import { Menu } from "@headlessui/react";
 
-const ProfileBar = () => {
+function MyDropdown() {
   const { user } = useUser();
 
   if (!user) return null;
 
-  console.log(user);
-
   return (
-    <div className="flex h-14 items-center justify-end rounded-lg bg-gray-100 px-4 text-gray-700 shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:shadow-lg md:h-14 md:items-center md:space-x-6 md:px-6 lg:space-x-8 lg:px-8 xl:space-x-10">
-      <button>
+    <Menu as="div" className="relative">
+      <Menu.Button className="rounded-full">
         <img
           src={user.profileImageUrl}
-          alt="Profile Image"
-          className="h-12 w-12 justify-end rounded-full "
+          alt=""
+          className="inline h-12 w-12 rounded-full "
         />
-      </button>
+      </Menu.Button>
+      <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right overflow-hidden rounded-md border bg-white shadow-lg focus:outline-none">
+        <Menu.Item>
+          <a href="/help" className="flex px-4 py-2 text-sm text-gray-700">
+            Help
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <SignOutButton>
+            <button className="flex px-4 py-2 text-sm text-gray-700">
+              Sign Out
+            </button>
+          </SignOutButton>
+        </Menu.Item>
+      </Menu.Items>
+    </Menu>
+  );
+}
+
+const ProfileBar = () => {
+  return (
+    <div className="flex h-14 items-center justify-end rounded-lg bg-gray-100 px-4 text-gray-700 shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:shadow-lg md:h-14 md:items-center md:space-x-6 md:px-6 lg:space-x-8 lg:px-8 xl:space-x-10">
+      <MyDropdown />
     </div>
   );
 };

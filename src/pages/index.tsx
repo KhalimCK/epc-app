@@ -1,10 +1,20 @@
-import { SignInButton, SignOutButton, SignUp, useUser } from "@clerk/nextjs";
+import {
+  SignIn,
+  SignInButton,
+  SignOutButton,
+  SignUp,
+  useUser,
+} from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
 
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
+  // This is our home page where the user will sign in. Once the user has signed
+  // in, we'll redirect them to the search page where they can begin looking up
+  // their address.
+
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   const user = useUser();
@@ -17,11 +27,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        {!user.isSignedIn ? (
+        <SignInButton redirectUrl="/search">Sign in</SignInButton>
+        {/* {!user.isSignedIn ? (
           <SignInButton>Sign in</SignInButton>
         ) : (
           <SignOutButton>Sign out</SignOutButton>
-        )}
+        )} */}
       </main>
     </>
   );

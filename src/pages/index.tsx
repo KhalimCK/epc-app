@@ -1,23 +1,20 @@
-import {
-  SignIn,
-  SignInButton,
-  SignOutButton,
-  SignUp,
-  useUser,
-} from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
+import { SignedOutLayout } from "~/components/layout";
+import type { NextPageWithLayout } from "./_app";
 
 import { api } from "~/utils/api";
+import { ReactElement } from "react";
 
-const Home: NextPage = () => {
+const Home: NextPageWithLayout = () => {
   // This is our home page where the user will sign in. Once the user has signed
   // in, we'll redirect them to the search page where they can begin looking up
   // their address.
 
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
-  const user = useUser();
+  const { isSignedIn } = useUser();
 
   return (
     <>
@@ -28,14 +25,13 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <SignInButton redirectUrl="/search">Sign in</SignInButton>
-        {/* {!user.isSignedIn ? (
-          <SignInButton>Sign in</SignInButton>
-        ) : (
-          <SignOutButton>Sign out</SignOutButton>
-        )} */}
       </main>
     </>
   );
+};
+
+Home.getLayout = function (page: ReactElement) {
+  return <SignedOutLayout>{page}</SignedOutLayout>;
 };
 
 export default Home;

@@ -1,14 +1,30 @@
-import { type AppType } from "next/app";
+import { AppProps, type AppType } from "next/app";
 
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, useUser } from "@clerk/nextjs";
+import Layout from "~/components/layout";
+import { ReactElement, ReactNode } from "react";
+import { NextPage } from "next";
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+// TODO: Resolve this
+// @ts-ignore
+const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
+  // Use the layout defined at the page level, if available
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <ClerkProvider {...pageProps}>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
     </ClerkProvider>
   );
 };

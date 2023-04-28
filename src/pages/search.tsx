@@ -1,7 +1,5 @@
-import { NextPage } from "next";
-import ProfileBar from "~/components/profilebar";
-import { NextPageWithLayout } from "./_app";
-import { ReactElement } from "react";
+import type { NextPageWithLayout } from "./_app";
+import type { ReactElement } from "react";
 import Layout from "~/components/layout";
 
 const Search: NextPageWithLayout = () => {

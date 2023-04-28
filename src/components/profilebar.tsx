@@ -1,6 +1,6 @@
 import { SignOutButton, useUser } from "@clerk/nextjs";
-import { User } from "@clerk/nextjs/dist/api";
 import { Menu } from "@headlessui/react";
+import Link from "next/link";
 
 function MyDropdown() {
   const { user } = useUser();
@@ -18,9 +18,9 @@ function MyDropdown() {
       </Menu.Button>
       <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right overflow-hidden rounded-md border bg-white shadow-lg focus:outline-none">
         <Menu.Item>
-          <a href="/help" className="flex px-4 py-2 text-sm text-gray-700">
+          <Link href="/help" className="flex px-4 py-2 text-sm text-gray-700">
             Help
-          </a>
+          </Link>
         </Menu.Item>
         <Menu.Item>
           <SignOutButton>

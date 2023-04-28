@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/nextjs";
 import ProfileBar from "./profilebar";
 
 type LayoutProps = {

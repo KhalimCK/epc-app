@@ -14,8 +14,6 @@ const Home: NextPageWithLayout = () => {
 
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
-  const { isSignedIn } = useUser();
-
   return (
     <>
       <Head>

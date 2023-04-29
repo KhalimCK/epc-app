@@ -15,9 +15,6 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-// TODO: Resolve this
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);

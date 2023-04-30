@@ -23,11 +23,13 @@ function MyDropdown() {
           </Link>
         </Menu.Item>
         <Menu.Item>
-          <SignOutButton>
-            <button className="flex px-4 py-2 text-sm text-gray-700">
-              Sign Out
-            </button>
-          </SignOutButton>
+          <a>
+            <SignOutButton>
+              <button className="flex px-4 py-2 text-sm text-gray-700">
+                Sign Out
+              </button>
+            </SignOutButton>
+          </a>
         </Menu.Item>
       </Menu.Items>
     </Menu>

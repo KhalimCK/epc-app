@@ -25,8 +25,8 @@ const Home: NextPageWithLayout = () => {
         <div className=" flex w-1/2 flex-col items-center justify-center bg-slate-100 p-10 drop-shadow-md">
           <h1 className="my-2 text-3xl">Welcome</h1>
           <p className="flexitems-center mb-8 flex justify-center">
-            Find out your home's energy efficiency rating and understand the
-            steps you can take to improve it
+            Find out your home&apos;s energy efficiency rating and understand
+            the steps you can take to improve it
           </p>
           <p className="mb-3 flex items-center justify-center">
             To get started, sign in below

@@ -6,11 +6,19 @@ import Layout from "~/components/layout";
 const Search: NextPageWithLayout = () => {
   const [postcode, setPostcode] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(true);
-
   const router = useRouter();
 
   const redirectToSearch = () => {
     router.push("/results");
+  };
+
+  const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log(e);
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      redirectToSearch();
+    }
   };
 
   const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +48,10 @@ const Search: NextPageWithLayout = () => {
           type="text"
           placeholder="Enter your postcode"
           onChange={handlePostcodeChange}
+          onKeyDown={handleSubmit}
         />
         <button
+          type="button"
           disabled={buttonDisabled}
           onClick={redirectToSearch}
           className="focus:shadow-outline mt-3 rounded bg-purple-500 px-4 py-2 font-bold text-white shadow hover:bg-purple-400 focus:outline-none disabled:opacity-25 disabled:hover:bg-purple-500"

@@ -8,13 +8,14 @@ const Search: NextPageWithLayout = () => {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const router = useRouter();
 
+  // Do something better than logging the error
   const redirectToSearch = () => {
-    router.push("/results");
+    router
+      .push("/results?postcode=" + postcode)
+      .catch((error) => console.log(error));
   };
 
   const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(e);
-
     if (e.key === "Enter") {
       e.preventDefault();
       redirectToSearch();
@@ -23,6 +24,7 @@ const Search: NextPageWithLayout = () => {
 
   const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // If the text is empty, disable the button, otherwise enable it
+    setPostcode(e.target.value);
     if (e.target.value) {
       setButtonDisabled(false);
       return;

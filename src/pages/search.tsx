@@ -9,16 +9,18 @@ const Search: NextPageWithLayout = () => {
   const router = useRouter();
 
   // Do something better than logging the error
-  const redirectToSearch = () => {
+  const redirectToSearch = async () => {
     router
-      .push("/results?postcode=" + postcode)
-      .catch((error) => console.log(error));
+      //   .push("/results?postcode=" + postcode)
+      .push({ pathname: "/results", query: { postcode: postcode } });
+    //   .then(() => {})
+    //   .catch((error) => console.log(error));
   };
 
-  const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      redirectToSearch();
+      await redirectToSearch();
     }
   };
 
@@ -55,7 +57,7 @@ const Search: NextPageWithLayout = () => {
         <button
           type="button"
           disabled={buttonDisabled}
-          onClick={redirectToSearch}
+          onClick={async () => await redirectToSearch()}
           className="focus:shadow-outline mt-3 rounded bg-purple-500 px-4 py-2 font-bold text-white shadow hover:bg-purple-400 focus:outline-none disabled:opacity-25 disabled:hover:bg-purple-500"
         >
           Submit

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Set the paths that don't require the user to be signed in
-const publicPaths = ["/", "/sign-in*"];
+const publicPaths = ["/"];
 
 const isPublic = (path: string) => {
   return publicPaths.find((x) =>
@@ -12,19 +12,29 @@ const isPublic = (path: string) => {
 };
 
 export default withClerkMiddleware((request: NextRequest) => {
-  if (isPublic(request.nextUrl.pathname)) {
-    return NextResponse.next();
-  }
   // if the user is not signed in redirect them to the sign in page.
   const { userId } = getAuth(request);
 
+  if (isPublic(request.nextUrl.pathname) && !userId) {
+    return NextResponse.next();
+  }
+
   if (!userId) {
     // redirect the users to /pages/sign-in/[[...index]].ts
-    console.log("REDIRECT");
     const signInUrl = new URL("/", request.url);
-    signInUrl.searchParams.set("redirect_url", request.url);
+    // The piece of code below inserts the source url into the redirect
+    // url however not needed for the momeny
+    // signInUrl.searchParams.set("redirect_url", request.url);
     return NextResponse.redirect(signInUrl);
   }
+
+  // If the user is signed in and the current url is /, redirect them to
+  // search
+  if (userId && request.nextUrl.pathname === "/") {
+    const searchUrl = new URL("/search", request.url);
+    return NextResponse.redirect(searchUrl);
+  }
+
   return NextResponse.next();
 });
 

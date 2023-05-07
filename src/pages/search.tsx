@@ -10,6 +10,7 @@ const Search: NextPageWithLayout = () => {
   const router = useRouter();
 
   // Do something better than logging the error
+  // Should probablt redirect to a something went wrong page
   const redirectToSearch = () => {
     router
       .push({ pathname: "/results", query: { postcode: postcode } })
@@ -34,7 +35,10 @@ const Search: NextPageWithLayout = () => {
     return;
   };
 
-  // TODO: Insert the postcode into the URL
+  const submitProps = {
+    buttonDisabled: buttonDisabled,
+    redirectFunc: redirectToSearch,
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center pt-40">
@@ -53,10 +57,7 @@ const Search: NextPageWithLayout = () => {
           onChange={handlePostcodeChange}
           onKeyDown={handleSubmit}
         />
-        <SubmitButton
-          buttonDisabled={buttonDisabled}
-          redirectToSearch={redirectToSearch}
-        />
+        <SubmitButton {...submitProps} />
       </form>
     </div>
   );

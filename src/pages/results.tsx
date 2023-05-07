@@ -1,20 +1,34 @@
-import { ReactElement, useEffect, useState } from "react";
-import { NextPageWithLayout } from "./_app";
+import { ReactElement, useState } from "react";
+import type { NextPageWithLayout } from "./_app";
 import Layout from "~/components/layout";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { SearchData, SearchResult } from "~/types";
 import SubmitButton from "~/components/submitButton";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const postcode = context.query.postcode;
+interface EpcDataProps {
+  data: SearchData;
+}
 
-  const url = `https://epc.opendatacommunities.org/api/v1/domestic/search?postcode=${postcode}&size=1000`;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const postcode = context.query.postcode ?? "";
+  var url;
+  if (!postcode || typeof postcode === "object") {
+    // return {
+    //   redirect: {
+    //     destination: "/",
+    //     permanent: false,
+    //   },
+    //   props: { data: {} },
+    // };
+    url = `https://epc.opendatacommunities.org/api/v1/domestic/search?size=1000`;
+  } else {
+    url = `https://epc.opendatacommunities.org/api/v1/domestic/search?postcode=${postcode}&size=1000`;
+  }
 
   const headers = new Headers({
     Accept: "application/json",
-    Authorization: "Basic " + process.env.EPC_AUTH_TOKEN,
+    Authorization: `Basic ${process.env.EPC_AUTH_TOKEN ?? ""}`,
   });
 
   const request = await fetch(url, { headers: headers });
@@ -74,9 +88,10 @@ const Results: NextPageWithLayout = ({
 
   const router = useRouter();
 
-  const list_items = data.rows.map((row: SearchResult) => {
+  const list_items: ReactElement[] = data.rows.map((row: SearchResult) => {
     return (
       <ToggleAddressButton
+        key={row["lmk-key"]}
         rowKey={row["lmk-key"]}
         setButtonDisabled={setButtonDisabled}
         setAddress={setAddress}

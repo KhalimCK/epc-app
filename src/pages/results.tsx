@@ -29,8 +29,8 @@ interface ToggleAddressButtonProps {
   rowKey: string;
   setButtonDisabled: (value: boolean) => void;
   setAddress: (value: string) => void;
-  buttonClassCache: { key: string }[];
-  currentlyToggledState: [string, (value: string) => void];
+  setCurrentlyToggled: (value: string) => void;
+  toggleClassName: string;
   address: string;
 }
 
@@ -44,37 +44,19 @@ const ToggleAddressButton = ({
   rowKey,
   setButtonDisabled,
   setAddress,
-  buttonClassCache,
-  currentlyToggledState,
+  setCurrentlyToggled,
+  toggleClassName,
   address,
 }: ToggleAddressButtonProps) => {
-  const buttonClass = buttonClassCache[rowKey];
-  const [toggleClass, setToggleClass] = useState(buttonClass);
-  const [currentlyToggled, setCurrentlyToggled] = currentlyToggledState;
-
   const handleOnClick = () => {
-    console.log(buttonClassCache);
-    setButtonDisabled(false);
-    // The lmk-key that is currently toggled will be stored in currentlyToggled
-    // We use that to update the untoggle the other buttons
-    // Initially, currentlyToggled is empty
-    if (currentlyToggled) {
-      // switch the previously toggled button to un-toggled
-      buttonClassCache[currentlyToggled] = defaultToggleClass;
-    }
-
-    // Now set the new  button to be toggled
-    buttonClassCache[rowKey] = toggledButtonClass;
-
-    // Keep track of which component is currently toggled
     setCurrentlyToggled(rowKey);
-    setToggleClass(toggledButtonClass);
-    setAddress("address");
+    setAddress(address);
+    setButtonDisabled(false);
   };
 
   return (
     <li key={rowKey}>
-      <a onClick={handleOnClick} className={toggleClass}>
+      <a onClick={handleOnClick} className={toggleClassName}>
         {address}
       </a>
     </li>
@@ -88,15 +70,7 @@ const Results: NextPageWithLayout = ({
   const [address, setAddress] = useState("");
   // Keep track of which lmk-key is currently toggled. Initially, none
   // are toggled
-  const currentlyToggledState = useState("");
-
-  let startingButtonCache = {};
-  data.rows.map((row: SearchResult) => {
-    const key = row["lmk-key"];
-    startingButtonCache[key] = defaultToggleClass;
-  });
-
-  const [buttonClassCache, setButtonClassCache] = useState(startingButtonCache);
+  const [currentlyToggled, setCurrentlyToggled] = useState("");
 
   const router = useRouter();
 
@@ -105,10 +79,14 @@ const Results: NextPageWithLayout = ({
       <ToggleAddressButton
         rowKey={row["lmk-key"]}
         setButtonDisabled={setButtonDisabled}
-        buttonClassCache={buttonClassCache}
         setAddress={setAddress}
-        currentlyToggledState={currentlyToggledState}
+        setCurrentlyToggled={setCurrentlyToggled}
         address={row.address}
+        toggleClassName={
+          currentlyToggled === row["lmk-key"]
+            ? toggledButtonClass
+            : defaultToggleClass
+        }
       />
     );
   });

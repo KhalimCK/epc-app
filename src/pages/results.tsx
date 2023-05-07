@@ -36,8 +36,10 @@ const Results: NextPageWithLayout = ({
 
   return (
     <>
-      <h1>Results</h1>
-      <ul>{list_items}</ul>
+      <div className="flex max-h-[40rem] flex-col items-center pt-10">
+        <h1 className="mb-5">Select your address</h1>
+        <ul className=" overflow-y-auto ">{list_items}</ul>
+      </div>
     </>
   );
 };

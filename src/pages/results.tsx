@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { SearchData, SearchResult } from "~/types";
+import SubmitButton from "~/components/submitButton";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const postcode = context.query.postcode;
@@ -27,7 +28,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Results: NextPageWithLayout = ({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  //   console.log(data.rows);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+
+  const router = useRouter();
 
   const list_items = data.rows.map((row: SearchResult) => {
     console.log(row);
@@ -40,11 +43,21 @@ const Results: NextPageWithLayout = ({
     );
   });
 
+  const redirectToEpc = () => {
+    router
+      .push({ pathname: "/epc", query: {} })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <>
       <div className="flex max-h-[40rem] flex-col items-center pt-10">
         <h1 className="mb-5">Select your address</h1>
         <ul className=" overflow-y-auto ">{list_items}</ul>
+        <SubmitButton
+          buttonDisabled={buttonDisabled}
+          redirectFunc={redirectToEpc}
+        />
       </div>
     </>
   );

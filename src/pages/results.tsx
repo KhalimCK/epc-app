@@ -25,27 +25,97 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
+interface ToggleAddressButtonProps {
+  rowKey: string;
+  setButtonDisabled: (value: boolean) => void;
+  setAddress: (value: string) => void;
+  buttonClassCache: { key: string }[];
+  currentlyToggledState: [string, (value: string) => void];
+  address: string;
+}
+
+const defaultToggleClass =
+  "mb-1 block max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700";
+
+const toggledButtonClass =
+  "text-white mb-1 block max-w-sm rounded-lg border border-gray-200 bg-purple-500 p-6 shadow hover:bg-purple-500 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700";
+
+const ToggleAddressButton = ({
+  rowKey,
+  setButtonDisabled,
+  setAddress,
+  buttonClassCache,
+  currentlyToggledState,
+  address,
+}: ToggleAddressButtonProps) => {
+  const buttonClass = buttonClassCache[rowKey];
+  const [toggleClass, setToggleClass] = useState(buttonClass);
+  const [currentlyToggled, setCurrentlyToggled] = currentlyToggledState;
+
+  const handleOnClick = () => {
+    console.log(buttonClassCache);
+    setButtonDisabled(false);
+    // The lmk-key that is currently toggled will be stored in currentlyToggled
+    // We use that to update the untoggle the other buttons
+    // Initially, currentlyToggled is empty
+    if (currentlyToggled) {
+      // switch the previously toggled button to un-toggled
+      buttonClassCache[currentlyToggled] = defaultToggleClass;
+    }
+
+    // Now set the new  button to be toggled
+    buttonClassCache[rowKey] = toggledButtonClass;
+
+    // Keep track of which component is currently toggled
+    setCurrentlyToggled(rowKey);
+    setToggleClass(toggledButtonClass);
+    setAddress("address");
+  };
+
+  return (
+    <li key={rowKey}>
+      <a onClick={handleOnClick} className={toggleClass}>
+        {address}
+      </a>
+    </li>
+  );
+};
+
 const Results: NextPageWithLayout = ({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [address, setAddress] = useState("");
+  // Keep track of which lmk-key is currently toggled. Initially, none
+  // are toggled
+  const currentlyToggledState = useState("");
+
+  let startingButtonCache = {};
+  data.rows.map((row: SearchResult) => {
+    const key = row["lmk-key"];
+    startingButtonCache[key] = defaultToggleClass;
+  });
+
+  const [buttonClassCache, setButtonClassCache] = useState(startingButtonCache);
 
   const router = useRouter();
 
   const list_items = data.rows.map((row: SearchResult) => {
-    console.log(row);
     return (
-      <li key={row["lmk-key"]}>
-        <a className="mb-1 block max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-          {row.address}
-        </a>
-      </li>
+      <ToggleAddressButton
+        rowKey={row["lmk-key"]}
+        setButtonDisabled={setButtonDisabled}
+        buttonClassCache={buttonClassCache}
+        setAddress={setAddress}
+        currentlyToggledState={currentlyToggledState}
+        address={row.address}
+      />
     );
   });
 
   const redirectToEpc = () => {
     router
-      .push({ pathname: "/epc", query: {} })
+      .push({ pathname: "/epc", query: { address: address } })
       .catch((error) => console.log(error));
   };
 

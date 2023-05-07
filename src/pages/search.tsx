@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import type { NextPageWithLayout } from "./_app";
 import { ReactElement, useState } from "react";
 import Layout from "~/components/layout";
+import SubmitButton from "~/components/submitButton";
 
 const Search: NextPageWithLayout = () => {
   const [postcode, setPostcode] = useState("");
@@ -52,14 +53,10 @@ const Search: NextPageWithLayout = () => {
           onChange={handlePostcodeChange}
           onKeyDown={handleSubmit}
         />
-        <button
-          type="button"
-          disabled={buttonDisabled}
-          onClick={redirectToSearch}
-          className="focus:shadow-outline mt-3 rounded bg-purple-500 px-4 py-2 font-bold text-white shadow hover:bg-purple-400 focus:outline-none disabled:opacity-25 disabled:hover:bg-purple-500"
-        >
-          Submit
-        </button>
+        <SubmitButton
+          buttonDisabled={buttonDisabled}
+          redirectToSearch={redirectToSearch}
+        />
       </form>
     </div>
   );

@@ -31,7 +31,13 @@ const Results: NextPageWithLayout = ({
 
   const list_items = data.rows.map((row: SearchResult) => {
     console.log(row);
-    return <li key={row["lmk-key"]}>{row.address}</li>;
+    return (
+      <li key={row["lmk-key"]}>
+        <a className="mb-1 block max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+          {row.address}
+        </a>
+      </li>
+    );
   });
 
   return (

@@ -3,12 +3,13 @@ import { NextPageWithLayout } from "./_app";
 import Layout from "~/components/layout";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { GetStaticProps } from "next";
-import { SearchData } from "~/types";
-import { InferGetStaticPropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { SearchData, SearchResult } from "~/types";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const url = "https://epc.opendatacommunities.org/api/v1/domestic/search";
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const postcode = context.query.postcode;
+
+  const url = `https://epc.opendatacommunities.org/api/v1/domestic/search?postcode=${postcode}&size=1000`;
 
   const headers = new Headers({
     Accept: "application/json",
@@ -25,16 +26,18 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const Results: NextPageWithLayout = ({
   data,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const router = useRouter();
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  //   console.log(data.rows);
 
-  console.log(data.rows);
-
-  const postcode = router.query.postcode;
+  const list_items = data.rows.map((row: SearchResult) => {
+    console.log(row);
+    return <li key={row["lmk-key"]}>{row.address}</li>;
+  });
 
   return (
     <>
       <h1>Results</h1>
+      <ul>{list_items}</ul>
     </>
   );
 };

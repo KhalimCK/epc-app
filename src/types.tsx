@@ -1,7 +1,7 @@
 //
 type SearchData = {
   "columns-names": string[];
-  rows: [{}];
+  rows: SearchResult[];
 };
 
 type SearchResult = {

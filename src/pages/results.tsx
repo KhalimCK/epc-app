@@ -27,6 +27,8 @@ export const getServerSideProps: GetServerSideProps<EpcDataProps> = async (
   });
 
   const request = await fetch(url, { headers: headers });
+  console.log("request");
+  console.log(request);
   // Explicitly assert typing of the response
   const data = (await request.json()) as SearchData;
   console.log("Fetched data");

@@ -98,4 +98,9 @@ type SearchResult = {
   "walls-description": string;
   "hotwater-description": string;
 };
-export type { SearchData, SearchResult };
+
+interface EpcDataProps {
+  data: SearchData;
+}
+
+export type { SearchData, SearchResult, EpcDataProps };

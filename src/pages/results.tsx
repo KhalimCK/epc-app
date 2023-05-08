@@ -1,26 +1,21 @@
 import { ReactElement, useState } from "react";
-import type { NextPageWithLayout } from "./_app";
+import type { ResultPageWithLayout } from "./_app";
 import Layout from "~/components/layout";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { SearchData, SearchResult } from "~/types";
+import type { SearchData, SearchResult } from "~/types";
 import SubmitButton from "~/components/submitButton";
 
 interface EpcDataProps {
   data: SearchData;
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<EpcDataProps> = async (
+  context
+) => {
   const postcode = context.query.postcode ?? "";
-  var url;
+  let url: string;
   if (!postcode || typeof postcode === "object") {
-    // return {
-    //   redirect: {
-    //     destination: "/",
-    //     permanent: false,
-    //   },
-    //   props: { data: {} },
-    // };
     url = `https://epc.opendatacommunities.org/api/v1/domestic/search?size=1000`;
   } else {
     url = `https://epc.opendatacommunities.org/api/v1/domestic/search?postcode=${postcode}&size=1000`;
@@ -32,7 +27,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   const request = await fetch(url, { headers: headers });
-  const data: SearchData = await request.json();
+  // Explicitly assert typing of the response
+  const data = (await request.json()) as SearchData;
 
   return {
     props: { data: data },
@@ -77,7 +73,7 @@ const ToggleAddressButton = ({
   );
 };
 
-const Results: NextPageWithLayout = ({
+const Results: ResultPageWithLayout = ({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [buttonDisabled, setButtonDisabled] = useState(true);

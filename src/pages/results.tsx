@@ -27,12 +27,8 @@ export const getServerSideProps: GetServerSideProps<EpcDataProps> = async (
   });
 
   const request = await fetch(url, { headers: headers });
-  console.log("logging request");
-  console.log(request);
   // Explicitly assert typing of the response
   const data = (await request.json()) as SearchData;
-  console.log("Fetched data");
-  console.log(data);
 
   return {
     props: { data: data },
@@ -107,8 +103,18 @@ const Results: ResultPageWithLayout = ({
   });
 
   const redirectToEpc = () => {
+    const res = data.rows.find(
+      (row: SearchResult) => row["lmk-key"] === currentlyToggled
+    );
+
     router
-      .push({ pathname: "/epc", query: { address: address } })
+      .push({
+        pathname: "/epc",
+        query: {
+          address: address,
+          res: encodeURIComponent(JSON.stringify(res)),
+        },
+      })
       .catch((error) => console.log(error));
   };
 

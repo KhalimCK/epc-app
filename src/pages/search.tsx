@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import type { NextPageWithLayout } from "./_app";
 import { ReactElement, useState } from "react";
 import Layout from "~/components/layout";
+import SubmitButton from "~/components/submitButton";
 
 const Search: NextPageWithLayout = () => {
   const [postcode, setPostcode] = useState("");
@@ -9,6 +10,7 @@ const Search: NextPageWithLayout = () => {
   const router = useRouter();
 
   // Do something better than logging the error
+  // Should probablt redirect to a something went wrong page
   const redirectToSearch = () => {
     router
       .push({ pathname: "/results", query: { postcode: postcode } })
@@ -33,7 +35,10 @@ const Search: NextPageWithLayout = () => {
     return;
   };
 
-  // TODO: Insert the postcode into the URL
+  const submitProps = {
+    buttonDisabled: buttonDisabled,
+    redirectFunc: redirectToSearch,
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center pt-40">
@@ -52,14 +57,7 @@ const Search: NextPageWithLayout = () => {
           onChange={handlePostcodeChange}
           onKeyDown={handleSubmit}
         />
-        <button
-          type="button"
-          disabled={buttonDisabled}
-          onClick={redirectToSearch}
-          className="focus:shadow-outline mt-3 rounded bg-purple-500 px-4 py-2 font-bold text-white shadow hover:bg-purple-400 focus:outline-none disabled:opacity-25 disabled:hover:bg-purple-500"
-        >
-          Submit
-        </button>
+        <SubmitButton {...submitProps} />
       </form>
     </div>
   );
